@@ -46,7 +46,7 @@ def logout_request(request):
 # Create a `registration` view to handle sign up request
 # @csrf_exempt
 def registration(request):
-    #context = {}
+    # context = {}
     # Load JSON data from the request body
     data = json.loads(request.body)
     username = data['userName']
@@ -55,7 +55,7 @@ def registration(request):
     last_name = data['lastName']
     email = data['email']
     username_exist = False
-    #email_exist = False
+    # email_exist = False
     try:
         # Check if user already exists
         User.objects.get(username=username)
@@ -85,7 +85,7 @@ def registration(request):
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
 def get_dealerships(request, state="All"):
-    if(state == "All"):
+    if (state == "All"):
         endpoint = "/fetchDealers"
     else:
         endpoint = "/fetchDealers/"+state
@@ -97,7 +97,7 @@ def get_dealerships(request, state="All"):
 def get_dealer_reviews(request, dealer_id):
     # if dealer id has been provided
     print(dealer_id)
-    if(dealer_id):
+    if (dealer_id):
         endpoint = "/fetchReviews/dealer/"+str(dealer_id)
         reviews = get_request(endpoint)
         print(reviews)
@@ -114,7 +114,7 @@ def get_dealer_reviews(request, dealer_id):
 # Create a `get_dealer_details` view to render the dealer details
 # def get_dealer_details(request, dealer_id):
 def get_dealer_details(request, dealer_id):
-    if(dealer_id):
+    if (dealer_id):
         endpoint = "/fetchDealer/"+str(dealer_id)
         dealership = get_request(endpoint)
         return JsonResponse({"status": 200, "dealer": dealership})
@@ -124,10 +124,10 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request):
-    if(request.user.is_anonymous is False):
+    if (request.user.is_anonymous is False):
         data = json.loads(request.body)
         try:
-            response = post_review(data)
+            post_review(data)
             return JsonResponse({"status": 200})
         except Exception as e:
             return JsonResponse({
@@ -141,10 +141,13 @@ def add_review(request):
 def get_cars(request):
     count = CarMake.objects.filter().count()
     print(count)
-    if(count == 0):
+    if (count == 0):
         initiate()
     car_models = CarModel.objects.select_related('car_make')
     cars = []
     for car_model in car_models:
-        cars.append({"CarModel": car_model.name, "CarMake": car_model.car_make.name})
+        cars.append({
+            "CarModel": car_model.name,
+            "CarMake": car_model.car_make.name
+        })
     return JsonResponse({"CarModels": cars})
