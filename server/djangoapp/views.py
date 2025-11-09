@@ -1,12 +1,7 @@
 # Uncomment the required imports before adding the code
 
-#from django.shortcuts import render
-#from django.http import HttpResponseRedirect, HttpResponse
-#from django.shortcuts import get_object_or_404, render, redirectRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
-#from django.contrib import messages
-#from datetime import datetime
 
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
@@ -67,7 +62,7 @@ def registration(request):
         username_exist = True
     except Exception as e:
         # If not, simply log this is a new user
-        logger.debug("{} is new user".format(username))
+        logger.debug("{} is new user".format(username) + f"{e}")
     # If it is a new user
     if not username_exist:
         # Create user in auth_user table
@@ -82,14 +77,13 @@ def registration(request):
         login(request, user)
         data = {"userName": username, "status": "Authenticated"}
         return JsonResponse(data)
-    else :
+    else:
         data = {"userName": username, "error": "Already Registered"}
         return JsonResponse(data)
 
 
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
-# def get_dealerships(request):
 def get_dealerships(request, state="All"):
     if(state == "All"):
         endpoint = "/fetchDealers"
@@ -108,6 +102,7 @@ def get_dealer_reviews(request, dealer_id):
         reviews = get_request(endpoint)
         print(reviews)
         for review_detail in reviews:
+
             response = analyze_review_sentiments(review_detail['review'])
             print(response)
             review_detail['sentiment'] = response['sentiment']
@@ -129,13 +124,16 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request):
-    if(request.user.is_anonymous == False):
+    if(request.user.is_anonymous is False):
         data = json.loads(request.body)
         try:
             response = post_review(data)
             return JsonResponse({"status": 200})
         except Exception as e:
-            return JsonResponse({"status": 401, "message":"Error in posting review"})
+            return JsonResponse({
+                "status": 401,
+                "message": f"{e}Error in posting review"
+            })
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
 

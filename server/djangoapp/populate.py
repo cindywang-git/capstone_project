@@ -96,16 +96,16 @@ def initiate():
         },
         {
             "name": "Camry",
-                        "typ
-            ": "Sedan", "
-            ear": 2023, "car_make": car_make_
-        instances[4]},
+            "type": "Sedan",
+            "year": 2023,
+            "car_make": car_make_instances[4]
+        },
         {
-            "name": "Kluge
-            ",
-
-]
-                                "type": "SUV", "year": 2023, "car_make": car_make_instances[4]},
+            "name": "Kluge",
+            "type": "SUV",
+            "year": 2023,
+            "car_make": car_make_instances[4]
+        },
         # Add more CarModel instances as needed
     ]
 
